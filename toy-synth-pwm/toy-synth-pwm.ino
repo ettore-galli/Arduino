@@ -156,6 +156,6 @@ void loop() {
 
   for (int shift = 0; shift < 24; shift ++ ) {
     phase_shift = 256.0 * shift / 256;
-    delay(200);
+    delay(500);
   }
 }
