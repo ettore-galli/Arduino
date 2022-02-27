@@ -155,8 +155,8 @@ void setup() {
 
 void loop() {
 
-  for (int shift = 0; shift < 24; shift ++ ) {
-    phase_shift = 256.0 * shift / 256;
-    delay(300);
+  for (int shift = 0; shift < 100; shift ++ ) {
+    phase_shift = 0.3 * shift ;
+    delay(100);
   }
 }

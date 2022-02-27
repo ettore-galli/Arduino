@@ -2,5 +2,6 @@
     "sketch": "toy-synth-pwm/toy-synth-pwm.ino",
     "configuration": "cpu=atmega328",
     "board": "arduino:avr:nano",
-    "port": "/dev/tty.usbserial-14120"
+    "port": "/dev/tty.usbserial-14120",
+    "output": "../ArduinoOutput"
 }
