@@ -1,5 +1,8 @@
 {
     "arduino.path": "/Users/ettoregalli/Documents/Arduino/bin",
     "arduino.useArduinoCli": true,
-    "arduino.commandPath": "arduino-cli"
+    "arduino.commandPath": "arduino-cli",
+    "files.associations": {
+        "numeric": "cpp"
+    }
 }
