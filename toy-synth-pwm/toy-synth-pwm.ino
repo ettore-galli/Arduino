@@ -35,7 +35,6 @@
     sine_wavetable = [int(127 * (1 + math.sin(2 * x * math.pi / SAMPLES))) for x in range(SAMPLES)]
     ```
 */
-
 #include "measurements.h"
 #include "pwm-timer.h"
 #include "waves.h"
