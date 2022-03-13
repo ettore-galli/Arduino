@@ -52,6 +52,9 @@ const int PWM_OUTPUT = 9;
 /* Analog input pitch controller */
 const int PITCH_CONTROL = A0;
 
+/* Note on button */
+const int NOTE_ON_INPUT = 2;
+
 /* Actual wave being used */
 const uint8_t* wave = sine;
 
@@ -59,12 +62,22 @@ const uint8_t* wave = sine;
 volatile float phase = 0;
 volatile float phase_shift = 256;
 
+/* Note on */
+volatile boolean noteOn = false;
+
 void setupSerial() { Serial.begin(BAUD_RATE); }
 
 void setupGPIO()
 {
     pinMode(PWM_OUTPUT, OUTPUT);
     pinMode(PITCH_CONTROL, INPUT);
+    pinMode(NOTE_ON_INPUT, INPUT_PULLUP);
+}
+
+void setupNoteInterrupt()
+{
+    attachInterrupt(digitalPinToInterrupt(NOTE_ON_INPUT), play, CHANGE);
+    // attachInterrupt(digitalPinToInterrupt(NOTE_ON_INPUT), mute, RISING);
 }
 
 /**
@@ -77,11 +90,13 @@ ISR(TIMER1_OVF_vect)
     phase = phase + phase_shift - (phase > SAMPLES ? SAMPLES : 0);
 }
 
+void play() { noteOn = !digitalRead(NOTE_ON_INPUT); }
+
 void ToneSweepLoopDemo()
 {
     for (int shift = 0; shift < 100; shift++) {
         phase_shift = 0.3 * shift;
-        Serial.println(phase_shift);
+        // Serial.println(phase_shift);
         delay(50);
     }
 }
@@ -90,7 +105,8 @@ void InputPitch()
 {
     setNewReading(analogRead(PITCH_CONTROL));
 
-    phase_shift = 50.0 * getReadingsAverage() / 1024;
+    // TODO: Find a better way to switch note on a nd off
+    phase_shift = noteOn ? 50.0 * getReadingsAverage() / 1024 : 0;
 
     delay(10);
 }
@@ -100,6 +116,7 @@ void setup()
     setupSerial();
     setupGPIO();
     setupTimer(256);
+    setupNoteInterrupt();
 
     ToneSweepLoopDemo();
 }
