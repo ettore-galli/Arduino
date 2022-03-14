@@ -23,18 +23,36 @@ void setupGPIO()
 
 void setupButtonInterrupt() { attachInterrupt(digitalPinToInterrupt(BUTTON_INPUT), change, CHANGE); }
 
-void change() { logic.setStatus(!digitalRead(BUTTON_INPUT), millis()); }
+bool readWithDebouce(int inputPin){
+    int N=5;
+    int d=1;
+    int r=0;
+    for (int i=0; i<N; i++){
+        if (!digitalRead(inputPin)){
+            r++;
+        }
+        delay(d);
+    }
+    return r > N - 1;
+}
+
+void change() { logic.setStatus(readWithDebouce(BUTTON_INPUT), millis()); }
 
 void RefreshOut()
 {
     delay(10);
     digitalWrite(LED_OUTPUT, logic.getStatus());
     if (logic.isInputTimeoutPassed(millis())){
-        for (int i=0; i<3; i++){
+        int* durations = logic.getDurations();
+        Serial.println("-----");
+        for (int i=0; i<logic.getTop(); i++){
+            Serial.println(durations[i]);
+        }
+        for (int i=0; i<logic.getTop(); i++){
             digitalWrite(LED_OUTPUT, HIGH);
-            delay(50);
+            delay(durations[i]);
             digitalWrite(LED_OUTPUT, LOW);
-            delay(50);
+            delay(durations[i]);
         }
         logic.reset();
     }

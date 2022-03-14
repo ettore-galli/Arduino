@@ -18,6 +18,7 @@ public:
     void reset();
     void add(int duration, int eventTime);
     int *getDurations();
+    int getTop();
     bool isInputTimeoutPassed(int currentTime);
 
     bool getStatus() { return m_ledStatus; }
