@@ -3,6 +3,8 @@
     "arduino.useArduinoCli": true,
     "arduino.commandPath": "arduino-cli",
     "files.associations": {
-        "numeric": "cpp"
+        "numeric": "cpp",
+        "queue": "cpp",
+        "chrono": "cpp"
     }
 }
