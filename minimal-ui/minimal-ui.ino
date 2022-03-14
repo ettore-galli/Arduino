@@ -1,4 +1,4 @@
-
+#include "UiLogic.h"
 
 /* MINIMAL UI */
 
@@ -8,6 +8,8 @@ const int BUTTON_INPUT = 2;
 const int LED_OUTPUT = 7;
 
 volatile boolean ledOn = false;
+
+UiLogic logic = UiLogic();
 
 void setupSerial() { Serial.begin(BAUD_RATE); }
 
@@ -21,7 +23,7 @@ void setupButtonInterrupt() { attachInterrupt(digitalPinToInterrupt(BUTTON_INPUT
 
 void change()
 {
-    ledOn = !digitalRead(BUTTON_INPUT);
+    logic.setStatus(!digitalRead(BUTTON_INPUT));
 }
 
 void logLedEvent(bool ledStatus){
@@ -36,7 +38,7 @@ void RefreshOut()
 {
     delay(10);
     //logLedEvent(ledOn);
-    digitalWrite(LED_OUTPUT, ledOn);
+    digitalWrite(LED_OUTPUT, logic.getStatus());
 }
 
 void setup()
