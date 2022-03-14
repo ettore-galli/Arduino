@@ -12,10 +12,7 @@
             "forcedInclude": [],
             "cStandard": "gnu17",
             "cppStandard": "gnu++14",
-            "defines": [],
-            "browse": {
-                "path": ["/Users/ettoregalli/Library/Arduino15/packages/arduino/hardware/avr/1.8.5/cores/arduino"]
-            }
+            "defines": []
         },
         {
             "name": "Arduino",

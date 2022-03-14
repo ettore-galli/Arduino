@@ -96,7 +96,6 @@ void ToneSweepLoopDemo()
 {
     for (int shift = 0; shift < 100; shift++) {
         phase_shift = 0.3 * shift;
-        // Serial.println(phase_shift);
         delay(50);
     }
 }
@@ -106,7 +105,7 @@ void InputPitch()
     setNewReading(analogRead(PITCH_CONTROL));
 
     // TODO: Find a better way to switch note on a nd off
-    phase_shift = noteOn ? 50.0 * getReadingsAverage() / 1024 : 0;
+    phase_shift = 10.0 * getReadingsAverage() / 1024 ;
 
     delay(10);
 }

@@ -1,5 +1,5 @@
 {
-    "sketch": "toy-synth-pwm/toy-synth-pwm.ino",
+    "sketch": "minimal-ui/minimal-ui.ino",
     "configuration": "cpu=atmega328",
     "board": "arduino:avr:nano",
     "port": "/dev/tty.usbserial-14120",
