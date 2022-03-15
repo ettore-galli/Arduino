@@ -1,5 +1,7 @@
-#include "UiLogic.h"
 #include <ArduinoUnit.h>
+
+#include "Event.h"
+#include "UiLogic.h"
 
 /* MINIMAL UI */
 
@@ -24,12 +26,13 @@ void setupGPIO()
 
 void setupButtonInterrupt() { attachInterrupt(digitalPinToInterrupt(BUTTON_INPUT), change, CHANGE); }
 
-bool readWithDebouce(int inputPin){
-    int N=5;
-    int d=1;
-    int r=0;
-    for (int i=0; i<N; i++){
-        if (!digitalRead(inputPin)){
+bool readWithDebouce(int inputPin)
+{
+    int N = 5;
+    int d = 1;
+    int r = 0;
+    for (int i = 0; i < N; i++) {
+        if (!digitalRead(inputPin)) {
             r++;
         }
         delay(d);
@@ -42,18 +45,16 @@ void change() { logic.setStatus(readWithDebouce(BUTTON_INPUT), millis()); }
 void RefreshOut()
 {
     delay(10);
-    digitalWrite(LED_OUTPUT, logic.getStatus());
-    if (logic.isInputTimeoutPassed(millis())){
-        int* durations = logic.getDurations();
-        Serial.println("-----");
-        for (int i=0; i<logic.getTop(); i++){
-            Serial.println(durations[i]);
-        }
-        for (int i=0; i<logic.getTop(); i++){
+    digitalWrite(LED_OUTPUT, logic.isLedOn());
+
+    if (logic.isInputTimeoutPassed(millis())) {
+        Event* events = logic.getEvents();
+
+        for (int i = 0; i < logic.getTop(); i++) {
             digitalWrite(LED_OUTPUT, HIGH);
-            delay(durations[i]);
+            delay(events[i].getDuration());
             digitalWrite(LED_OUTPUT, LOW);
-            delay(durations[i]);
+            delay(events[i].getDuration());
         }
         logic.reset();
     }
