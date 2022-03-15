@@ -14,13 +14,7 @@ void UiLogic::setStatus(bool ledOn, int eventTime)
     registerEvent(ledOn, eventTime);
 }
 
-void UiLogic::registerEvent(bool ledOn, int eventTime)
-{
-    if (!m_ledOn) {
-        add(eventTime - m_startTimeMillis, eventTime);
-    }
-    m_startTimeMillis = eventTime;
-}
+void UiLogic::registerEvent(bool ledOn, int eventTime) { add(ledOn, eventTime); }
 
 void UiLogic::reset()
 {
@@ -30,10 +24,10 @@ void UiLogic::reset()
     m_top = 0;
 }
 
-void UiLogic::add(int duration, int eventTime)
+void UiLogic::add(bool ledOn, int eventTime)
 {
     m_timeLastEvent = eventTime;
-    m_events[m_top] = Event(true, eventTime, duration);
+    m_events[m_top] = Event(ledOn, eventTime, 0);
     m_top++;
 }
 

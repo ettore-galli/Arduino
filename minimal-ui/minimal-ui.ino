@@ -51,10 +51,10 @@ void RefreshOut()
         Event* events = logic.getEvents();
 
         for (int i = 0; i < logic.getTop(); i++) {
-            digitalWrite(LED_OUTPUT, HIGH);
-            delay(events[i].getDuration());
-            digitalWrite(LED_OUTPUT, LOW);
-            delay(events[i].getDuration());
+            // TODO: Move this calculation into logic class
+            digitalWrite(LED_OUTPUT, events[i].isLedOn());
+            int duration = (i + 1 < logic.getTop()) ? events[i + 1].getEventTime() - events[i].getEventTime() : 0;
+            delay(duration);
         }
         logic.reset();
     }
