@@ -10,10 +10,9 @@ class UiLogic {
 private:
     bool m_ledOn;
 
-    Event m_events[MAX_EVENTS];
-    int m_top;
+    Event m_events[MAX_EVENTS];  
     
-    int m_timeLastEvent;
+    int m_top;
     int m_inputTimeoutMillis;
 
 public:

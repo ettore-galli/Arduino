@@ -4,7 +4,6 @@
 UiLogic::UiLogic(int inputTimeoutMillis)
 {
     m_top = 0;
-    m_timeLastEvent = 0;
     m_inputTimeoutMillis = inputTimeoutMillis;
 }
 
@@ -26,7 +25,6 @@ void UiLogic::reset()
 
 void UiLogic::add(bool ledOn, int eventTime)
 {
-    m_timeLastEvent = eventTime;
     m_events[m_top] = Event(ledOn, eventTime, 0);
     m_top++;
 }
@@ -37,5 +35,5 @@ int UiLogic::getTop() { return m_top; }
 
 bool UiLogic::isInputTimeoutPassed(int currentTime)
 {
-    return m_top > 0 && currentTime > m_timeLastEvent + m_inputTimeoutMillis;
+    return m_top > 0 && currentTime > m_events[m_top - 1].getEventTime() + m_inputTimeoutMillis;
 }
