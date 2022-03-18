@@ -5,6 +5,11 @@
     "files.associations": {
         "numeric": "cpp",
         "queue": "cpp",
-        "chrono": "cpp"
+        "chrono": "cpp",
+        "algorithm": "cpp",
+        "bitset": "cpp",
+        "memory": "cpp",
+        "optional": "cpp",
+        "random": "cpp"
     }
 }
