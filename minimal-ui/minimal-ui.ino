@@ -10,6 +10,7 @@
 #define INPUT_TIMEOUT_MILLIS 1000
 #define INTER_LOOP_DELAY_MILLIS 1000
 
+enum class debouncedReadings : char { high = 1, low = -1, undecidable = 0 };
 const int BUTTON_INPUT = 2;
 const int LED_OUTPUT = 7;
 
@@ -26,21 +27,33 @@ void setupGPIO()
 
 void setupButtonInterrupt() { attachInterrupt(digitalPinToInterrupt(BUTTON_INPUT), change, CHANGE); }
 
-bool readWithDebouce(int inputPin)
+debouncedReadings readWithDebouce(int inputPin)
 {
-    int N = 5;
-    int d = 1;
+    int N = 3;
+    int d = 5;
     int r = 0;
-    for (int i = 0; i < N; i++) {
+    for (int i = 0; i < 3 * N; i++) {
         if (!digitalRead(inputPin)) {
             r++;
         }
         delay(d);
     }
-    return r > N - 1;
+    if (r > 2 * N) {
+        return debouncedReadings ::high;
+    }
+    if (r < N) {
+        return debouncedReadings ::low;
+    }
+    return debouncedReadings ::undecidable;
 }
 
-void change() { logic.processButtonEvent(readWithDebouce(BUTTON_INPUT), millis()); }
+void change()
+{
+    debouncedReadings reading = readWithDebouce(BUTTON_INPUT);
+    if (reading != debouncedReadings ::undecidable) {
+        logic.processButtonEvent(reading == debouncedReadings ::high, millis());
+    }
+}
 
 void outputLedStatus()
 {
@@ -52,6 +65,28 @@ void checkAndStartLoopMode()
 {
     if (logic.isInputTimeoutPassed(millis())) {
         logic.startLoop();
+    }
+}
+
+void echoLoop()
+{
+    if (!logic.isLoopMode()) {
+        return;
+    }
+
+    digitalWrite(LED_BUILTIN, HIGH);
+
+    Event* events = logic.getEvents();
+
+    displayEventsSequenceInLoop(events);
+    displayEventsEndSignal();
+}
+
+void displayEventsSequenceInLoop(Event* events)
+{
+    while (logic.isLoopMode()) {
+        delay(INTER_LOOP_DELAY_MILLIS);
+        displayEventsSequence(events);
     }
 }
 
@@ -69,27 +104,6 @@ void displayEventsSequence(Event* events)
         int duration = (i + 1 < logic.getTop()) ? events[i + 1].getEventTime() - events[i].getEventTime() : 0;
 
         delay(duration);
-    }
-}
-
-void echoLoop()
-{
-    if (!logic.isLoopMode()) {
-        return;
-    }
-
-    digitalWrite(LED_BUILTIN, HIGH);
-
-    Event* events = logic.getEvents();
-    displayEventsSequenceInLoop(events);
-    displayEventsEndSignal();
-}
-
-void displayEventsSequenceInLoop(Event* events)
-{
-    while (logic.isLoopMode()) {
-        delay(INTER_LOOP_DELAY_MILLIS);
-        displayEventsSequence(events);
     }
 }
 
