@@ -38,10 +38,10 @@ debouncedReadings readWithDebouce(int inputPin)
         }
         delay(d);
     }
-    if (r > 2 * N) {
+    if (r >  N - 2) {
         return debouncedReadings ::high;
     }
-    if (r < N) {
+    if (r < 2) {
         return debouncedReadings ::low;
     }
     return debouncedReadings ::undecidable;
