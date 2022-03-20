@@ -1,6 +1,7 @@
 #include <ArduinoUnit.h>
 
 #include "Event.h"
+#include "OutputEvent.h"
 #include "UiLogic.h"
 
 /* MINIMAL UI */
@@ -9,6 +10,7 @@
 
 #define INPUT_TIMEOUT_MILLIS 1000
 #define INTER_LOOP_DELAY_MILLIS 1000
+#define EVENTS_END_SIGNAL_DELAY 50
 
 enum class debouncedReadings : char { high = 1, low = -1, undecidable = 0 };
 const int BUTTON_INPUT = 2;
@@ -76,13 +78,14 @@ void echoLoop()
 
     digitalWrite(LED_BUILTIN, HIGH);
 
-    Event* events = logic.getEvents();
+    logic.buildOutputEvents();
+    OutputEvent* events = logic.getOutputEvents();
 
     displayEventsSequenceInLoop(events);
-    displayEventsEndSignal();
+    displayEventsEndSignal(EVENTS_END_SIGNAL_DELAY);
 }
 
-void displayEventsSequenceInLoop(Event* events)
+void displayEventsSequenceInLoop(OutputEvent* events)
 {
     while (logic.isLoopMode()) {
         delay(INTER_LOOP_DELAY_MILLIS);
@@ -90,7 +93,7 @@ void displayEventsSequenceInLoop(Event* events)
     }
 }
 
-void displayEventsSequence(Event* events)
+void displayEventsSequence(OutputEvent* events)
 {
     for (int i = 0; i < logic.getTop(); i++) {
 
@@ -99,17 +102,13 @@ void displayEventsSequence(Event* events)
         }
 
         digitalWrite(LED_OUTPUT, events[i].isLedOn());
-
-        // TODO: Move this calculation into logic class
-        int duration = (i + 1 < logic.getTop()) ? events[i + 1].getEventTime() - events[i].getEventTime() : 0;
-
-        delay(duration);
+        delay(events[i].getDuration());
     }
 }
 
-void displayEventsEndSignal()
+void displayEventsEndSignal(int interval)
 {
-    int interval = 50;
+     
     digitalWrite(LED_OUTPUT, LOW);
     delay(3 + interval);
     for (int i = 0; i < 3; i++) {

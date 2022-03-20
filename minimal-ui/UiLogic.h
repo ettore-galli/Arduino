@@ -1,4 +1,5 @@
 #include "Event.h"
+#include "OutputEvent.h"
 
 #ifndef UI_LOGIC_H
 #define UI_LOGIC_H
@@ -12,6 +13,7 @@ private:
     bool m_outputLoopOn;
 
     Event m_events[MAX_EVENTS];  
+    OutputEvent m_output_events[MAX_EVENTS];  
 
     int m_top;
     int m_inputTimeoutMillis;
@@ -34,7 +36,9 @@ public:
     Event* getEvents();
     int getTop();
     bool isInputTimeoutPassed(int currentTime);
-    
+
+    void buildOutputEvents();
+    OutputEvent* getOutputEvents(); 
     
 };
 

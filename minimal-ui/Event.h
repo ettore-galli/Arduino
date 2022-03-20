@@ -9,7 +9,7 @@ private:
 
 public:
     Event() {};
-    Event(bool ledOn, int eventTime, int duration)
+    Event(bool ledOn, int eventTime)
     {
         m_ledOn = ledOn;
         m_eventTime = eventTime;
