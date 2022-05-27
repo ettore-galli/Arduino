@@ -40,7 +40,7 @@ debouncedReadings readWithDebouce(int inputPin)
         }
         delay(d);
     }
-    if (r >  N - 2) {
+    if (r > N - 2) {
         return debouncedReadings ::high;
     }
     if (r < 2) {
@@ -53,7 +53,7 @@ void change()
 {
     debouncedReadings reading = readWithDebouce(BUTTON_INPUT);
     if (reading != debouncedReadings ::undecidable) {
-        Serial.println(reading == debouncedReadings ::high? "ON" : "OFF");
+        Serial.println(reading == debouncedReadings ::high ? "ON" : "OFF");
         logic.processButtonEvent(reading == debouncedReadings ::high, millis());
     }
 }
@@ -64,67 +64,25 @@ void outputLedStatus()
     digitalWrite(LED_OUTPUT, logic.isLedOn());
 }
 
-void checkAndStartLoopMode()
-{
-    if (logic.isInputTimeoutPassed(millis())) {
-        logic.startLoop();
-    }
-}
-
-void echoLoop()
-{
-    if (!logic.isLoopMode()) {
-        return;
-    }
-
-    digitalWrite(LED_BUILTIN, HIGH);
-
-    logic.buildOutputEvents();
-    OutputEvent* events = logic.getOutputEvents();
-
-    displayEventsSequenceInLoop(events);
-    displayEventsEndSignal(EVENTS_END_SIGNAL_DELAY);
-}
-
-void displayEventsSequenceInLoop(OutputEvent* events)
-{
-    while (logic.isLoopMode()) {
-        delay(INTER_LOOP_DELAY_MILLIS);
-        displayEventsSequence(events);
-    }
-}
-
 void displayEventsSequence(OutputEvent* events)
 {
     for (int i = 0; i < logic.getTop(); i++) {
-
-        if (!logic.isLoopMode()) {
-            break;
-        }
 
         digitalWrite(LED_OUTPUT, events[i].isLedOn());
         delay(events[i].getDuration());
     }
 }
 
-void displayEventsEndSignal(int interval)
-{
-     
-    digitalWrite(LED_OUTPUT, LOW);
-    delay(3 + interval);
-    for (int i = 0; i < 3; i++) {
-        digitalWrite(LED_OUTPUT, HIGH);
-        delay(interval);
-        digitalWrite(LED_OUTPUT, LOW);
-        delay(interval);
-    }
-}
-
 void DisplayOutput()
 {
     outputLedStatus();
-    checkAndStartLoopMode();
-    echoLoop();
+
+    if (logic.isInputTimeoutPassed(millis())) {
+        logic.buildOutputEvents();
+        OutputEvent* events = logic.getOutputEvents();
+        displayEventsSequence(events);
+        logic.reset();
+    }
 }
 
 void setup()

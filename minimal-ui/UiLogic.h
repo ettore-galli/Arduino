@@ -10,10 +10,9 @@ using namespace std;
 class UiLogic {
 private:
     bool m_ledOn;
-    bool m_outputLoopOn;
 
-    Event m_events[MAX_EVENTS];  
-    OutputEvent m_output_events[MAX_EVENTS];  
+    Event m_events[MAX_EVENTS];
+    OutputEvent m_output_events[MAX_EVENTS];
 
     int m_top;
     int m_inputTimeoutMillis;
@@ -22,10 +21,6 @@ public:
     UiLogic(int inputTimeoutMillis);
 
     bool isLedOn() { return m_ledOn; }
-
-    void startLoop();
-    void endLoop();
-    bool isLoopMode();
 
     void processButtonEvent(bool ledOn, int eventTime);
 
@@ -38,8 +33,7 @@ public:
     bool isInputTimeoutPassed(int currentTime);
 
     void buildOutputEvents();
-    OutputEvent* getOutputEvents(); 
-    
+    OutputEvent* getOutputEvents();
 };
 
 #endif
