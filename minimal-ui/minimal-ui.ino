@@ -53,6 +53,7 @@ void change()
 {
     debouncedReadings reading = readWithDebouce(BUTTON_INPUT);
     if (reading != debouncedReadings ::undecidable) {
+        Serial.println(reading == debouncedReadings ::high? "ON" : "OFF");
         logic.processButtonEvent(reading == debouncedReadings ::high, millis());
     }
 }
